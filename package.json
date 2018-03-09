@@ -14,8 +14,9 @@
     "test": "neutrino test",
     "prepublish": "neutrino build"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Fredrik Teschke",
+  "license": "MIT",
+  "repository": "github:ftes/fake-server",
   "devDependencies": {
     "@neutrinojs/airbnb-base": "^8.1.2",
     "@neutrinojs/jest": "^8.1.2",
