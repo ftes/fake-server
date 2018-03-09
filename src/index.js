@@ -5,14 +5,15 @@ import morgan from 'morgan';
 import cliUsage from 'command-line-usage';
 import cliArgs from 'command-line-args';
 import path from 'path';
+import process from 'process';
 import * as middleware from './middleware';
 
 const optionList = [
   {
-    name: 'port', description: 'Port the server listens on', alias: 'p', type: Number, defaultValue: 1337,
+    name: 'configDir', group: 'mandatory', description: 'Directory with `configuration.js` file and `data` folder', alias: 'c', type: String,
   },
   {
-    name: 'configDir', description: 'Directory with `configuration.js` file and `data` folder', alias: 'c', type: String, defaultValue: './config',
+    name: 'port', description: 'Port the server listens on', alias: 'p', type: Number, defaultValue: 1337,
   },
   {
     name: 'basicAuthUser', description: 'Basic Auth User for proxying', alias: 'u', type: String,
@@ -24,15 +25,29 @@ const optionList = [
     name: 'help', description: 'Display this usage guide.', alias: 'h', type: Boolean,
   },
 ];
+const mandatoryOptions = ['configDir'];
+// eslint-disable-next-line no-underscore-dangle
 const options = cliArgs(optionList, {
   partial: true,
-});
+})._all;
+
+const allMandatoryOptionsGiven = mandatoryOptions.every(name => name in options);
 
 if (options.help) {
   console.log(cliUsage([
     { header: 'Fake Server', content: 'Proxy, mock and play back stored responses.' },
-    { header: 'Options', optionList },
+    { header: 'Mandatory Options', optionList, group: ['mandatory'] },
+    { header: 'Optional Options', optionList },
   ]));
+
+  process.exit();
+}
+
+if (!allMandatoryOptionsGiven) {
+  console.log(`Missing mandatory options: ${mandatoryOptions.filter(name => !(name in options))}`);
+  console.log('Run with `--help` flag to see all options');
+
+  process.exit(1);
 }
 
 const app = express();
