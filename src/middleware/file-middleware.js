@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
+import record from './record';
+
 function getSubDir(dir, subDir, remainingPathSegments) {
   const dirContents = fs.readdirSync(dir);
   const nextPath = path.join(dir, subDir);
@@ -37,7 +39,7 @@ function getDirWithWildcards(pathSegments, dir) {
  * - `GET dir/123`  -> `/data/dir/∗/get.json`
  * - `POST dir`     -> `/data/dir/post.json`
  */
-const middleware = ({ configDir }) => (req, res, next) => {
+const middleware = (cliOptions, { touchMissing } = {}) => (req, res, next) => {
   if (res.body) {
     next();
     return;
@@ -45,7 +47,7 @@ const middleware = ({ configDir }) => (req, res, next) => {
 
   console.log('looking for', req.method, req.path);
   const pathSegments = req.path.split('/').filter(s => s !== '');
-  const dir = getDirWithWildcards(pathSegments, path.join(configDir, 'data'));
+  const dir = getDirWithWildcards(pathSegments, path.join(cliOptions.configDir, 'data'));
   const file = dir && `${path.join(dir, req.method.toLowerCase())}.json`;
 
 
@@ -57,6 +59,9 @@ const middleware = ({ configDir }) => (req, res, next) => {
     } catch (e) {
       // ignore, maybe the file is empty
     }
+  } else if (touchMissing) {
+    record(req, '', cliOptions);
+    res.body = '';
   }
 
   next();
