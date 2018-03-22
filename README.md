@@ -1,9 +1,13 @@
 # Fake Server
 
+[![npmjs](https://img.shields.io/npm/v/@ftes/fake-server.svg)](https://www.npmjs.com/package/@ftes/fake-server)
+
 Serve static responses, proxy responses and generate random responses from swagger specs.
 
 1. `npm install --global @ftes/fake-server` (or `yarn global add @ftes/fake-server`)
 2. `fake-server --configDir=<config-dir>` (`configDir` parameter is mandatory)
+
+The main idea is to use a `configDir` from your app repository. You can manage and version the fake responses together with the app you are developing. The `fake-server` installation uses this app-specific config to generate responses.
 
 The behaviour of the fake server is fully configurable through the `configDir/configuration.js` file. The function it exports is called with the express `app` instance, the available `middleware` and all command line options.
 
