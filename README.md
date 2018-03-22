@@ -7,12 +7,12 @@ Serve static responses, proxy responses and generate random responses from swagg
 1. `npm install --global @ftes/fake-server` (or `yarn global add @ftes/fake-server`)
 2. `fake-server --configDir=<config-dir>` (`configDir` parameter is mandatory)
 
-The main idea is to use a `configDir` from your app repository. You can manage and version the fake responses together with the app you are developing. The `fake-server` installation uses this app-specific config to generate responses.
+The main idea is to use a `configDir` from your app repository (copy `./config` from this repo as a template). You can manage and version the fake responses together with the app you are developing. The `fake-server` installation uses this app-specific config to generate responses.
 
 The behaviour of the fake server is fully configurable through the `configDir/configuration.js` file. The function it exports is called with the express `app` instance, the available `middleware` and all command line options.
 
 ## Config Directory
-Use [`./config`](./config) as a template. It must contain a `configuration.js` and `data` folder. The structure of the `data` folder is [explained below](#data).
+Use [`./config`](./config) as a template. Copy it to your app's repository. It must contain a `configuration.js` and `data` folder. The structure of the `data` folder is [explained below](#data).
 
 ## Data directory<span id="data"/>
 Responses can be manually added as files. Also, proxied responses and swagger-generated ones are stored to this directory.
