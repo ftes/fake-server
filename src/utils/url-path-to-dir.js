@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+
 export function* dirGenerator(pathSegments) {
   if (pathSegments.length === 0) {
     yield* [[]];
@@ -16,6 +19,23 @@ export function* dirGenerator(pathSegments) {
   }
 }
 
-export default function urlPathToDir(urlPath, searchDir) {
-  return null;
-}
+export const filterMatchingFiles = (files, httpMethod) =>
+  files.filter(file => file.toLowerCase().startsWith(`${httpMethod.toLowerCase()}.`));
+
+const randomArrayElement = array => array[Math.floor(Math.random() * array.length)];
+
+const urlPathToDir = (
+  urlPath, searchDir, httpMethod,
+  randomFunction = randomArrayElement,
+) => [...dirGenerator(urlPath.split('/'))]
+  .map((dirSuffixSegments) => {
+    const dirSuffix = dirSuffixSegments.join('/');
+    const dir = path.join(searchDir, dirSuffix);
+    const filesInDir = fs.readdirSync(dir);
+    const matchingFilesInDir = filterMatchingFiles(filesInDir, httpMethod);
+    const matchingFiles = matchingFilesInDir.map(file => path.join(dir, file));
+    return randomFunction(matchingFiles);
+  })
+  .find(file => !!file);
+
+export default urlPathToDir;
