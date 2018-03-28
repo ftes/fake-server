@@ -1,5 +1,6 @@
 /* global __non_webpack_require__ */
 
+import bodyParser from 'body-parser';
 import express from 'express';
 import morgan from 'morgan';
 import cliUsage from 'command-line-usage';
@@ -52,7 +53,10 @@ if (!allMandatoryOptionsGiven) {
 
 const app = express();
 app.use(morgan('tiny')); // log requests
-app.use(express.json()); // parse JSON body in request
+app.use(bodyParser.json()); // parse JSON body in request
+app.use(bodyParser.urlencoded({
+  extended: true,
+}));
 
 const configuration = __non_webpack_require__(path.resolve(path.join(options.configDir, 'configuration')));
 configuration(app, {
