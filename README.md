@@ -32,6 +32,18 @@ The responses can be manually added. Also, proxied responses and swagger-generat
 | `POST books`              | `/data/books/post.json`             |
 | `GET  books/123/chapters` | `/data/books/123/chapters/get.json` |
 
+#### Creating a simple echo endpoint
+
+`configuration/configuration.js`
+
+```javascript
+module.exports = (app, { middleware, options }) => {
+  app.all(['/echo', '/echo/*'], (req, res) => {
+    res.send(JSON.stringify(Object.assign({}, req.body, req.query)));
+  });
+};
+```
+
 ## Middleware
 You can use the provided middleware in your `configuration.js`. This includes:
 - [`echo-params`](./src/middleware/echo-params-middleware.js)
