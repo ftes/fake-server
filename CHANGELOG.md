@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.0.4] - 2018-03-28
+### Added
+- `bodyParser` dependency for deserializing form-encoded request body
+- `echo` endpoint as an example in configuration
+
+### Changed
+- documentation improved
+
 ## [1.0.3] - 2018-03-14
 ### Added
 - `touchMissing` option for `file` middleware
