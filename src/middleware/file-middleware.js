@@ -2,33 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 import record from './record';
-
-function getSubDir(dir, subDir, remainingPathSegments) {
-  const dirContents = fs.readdirSync(dir);
-  const nextPath = path.join(dir, subDir);
-
-  return dirContents.includes(subDir)
-    // eslint-disable-next-line no-use-before-define
-    ? getDirWithWildcards(remainingPathSegments, nextPath)
-    : false;
-}
-
-/**
- * For path segment either
- * - a directory or file with exactly that name
- * - or a wildcard directory or file (`*`)
- * must be present.
- */
-function getDirWithWildcards(pathSegments, dir) {
-  if (pathSegments.length === 0) {
-    return dir;
-  }
-
-  const remainingPathSegments = pathSegments.slice(1);
-  return getSubDir(dir, pathSegments[0], remainingPathSegments)
-        || getSubDir(dir, '*', remainingPathSegments)
-        || false;
-}
+import urlPathToFile from '../utils/url-path-to-file';
 
 /**
  * If the requested path matches a file in data, parse that file to res.body.
@@ -46,10 +20,8 @@ const middleware = (cliOptions, { touchMissing } = {}) => (req, res, next) => {
   }
 
   console.log('looking for', req.method, req.path);
-  const pathSegments = req.path.split('/').filter(s => s !== '');
-  const dir = getDirWithWildcards(pathSegments, path.join(cliOptions.configDir, 'data'));
+  const dir = urlPathToFile(req.path, path.join(cliOptions.configDir, 'data'), req.method);
   const file = dir && `${path.join(dir, req.method.toLowerCase())}.json`;
-
 
   if (dir && fs.existsSync(file)) {
     console.log('found', file);

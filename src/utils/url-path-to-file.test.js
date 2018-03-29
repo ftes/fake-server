@@ -2,7 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 
 import fs from 'fs';
-import urlPathToDir, { dirGenerator, filterMatchingFiles } from './url-path-to-dir';
+import urlPathToFile, { dirGenerator, filterMatchingFiles } from './url-path-to-file';
 
 jest.mock('fs');
 
@@ -57,7 +57,7 @@ describe('url path to dir', () => {
     });
   });
 
-  describe('url path to dir', () => {
+  describe('url path to file', () => {
     it('should return undefined for no matching file', () => {
       fs.__setMockFiles({
         '/searchDir/path/post.json': '',
@@ -65,7 +65,7 @@ describe('url path to dir', () => {
       });
 
       const randomFn = jest.fn(([firstElement]) => firstElement);
-      const output = urlPathToDir('/path', '/searchDir', 'GET', randomFn);
+      const output = urlPathToFile('/path', '/searchDir', 'GET', randomFn);
       expect(output).toBeUndefined();
     });
 
@@ -75,7 +75,7 @@ describe('url path to dir', () => {
       });
 
       const randomFn = jest.fn(([firstElement]) => firstElement);
-      const output = urlPathToDir('/path', '/searchDir', 'GET', randomFn);
+      const output = urlPathToFile('/path', '/searchDir', 'GET', randomFn);
       expect(output).toEqual('/searchDir/path/get.json');
     });
 
@@ -87,13 +87,23 @@ describe('url path to dir', () => {
       });
 
       const randomFn = jest.fn(([firstElement]) => firstElement);
-      const output = urlPathToDir('/path', '/searchDir', 'GET', randomFn);
+      const output = urlPathToFile('/path', '/searchDir', 'GET', randomFn);
       expect(randomFn).toBeCalledWith([
         '/searchDir/path/get.json',
         '/searchDir/path/get.200.json',
         '/searchDir/path/get.404.json',
       ]);
       expect(output).toEqual('/searchDir/path/get.json');
+    });
+
+    it('inserts a wildcard to get an indirect match', () => {
+      fs.__setMockFiles({
+        '/searchDir/*/get.json': '',
+      });
+
+      const randomFn = jest.fn(([firstElement]) => firstElement);
+      const output = urlPathToFile('/path', '/searchDir', 'GET', randomFn);
+      expect(output).toEqual('/searchDir/*/get.json');
     });
   });
 });

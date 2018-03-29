@@ -24,10 +24,10 @@ export const filterMatchingFiles = (files, httpMethod) =>
 
 const randomArrayElement = array => array[Math.floor(Math.random() * array.length)];
 
-const urlPathToDir = (
+const urlPathToFile = (
   urlPath, searchDir, httpMethod,
   randomFunction = randomArrayElement,
-) => [...dirGenerator(urlPath.split('/'))]
+) => [...dirGenerator(urlPath.split('/').filter(s => s !== ''))]
   .map((dirSuffixSegments) => {
     const dirSuffix = dirSuffixSegments.join('/');
     const dir = path.join(searchDir, dirSuffix);
@@ -38,4 +38,4 @@ const urlPathToDir = (
   })
   .find(file => !!file);
 
-export default urlPathToDir;
+export default urlPathToFile;
