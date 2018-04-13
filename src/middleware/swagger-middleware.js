@@ -1,4 +1,6 @@
 import swagmock from 'swagmock';
+
+import logger from '../utils/logger';
 import record from './record';
 
 const middlewareFactory = (apiSpec, cliOptions, { recordData = true } = {}) => {
@@ -16,15 +18,17 @@ const middlewareFactory = (apiSpec, cliOptions, { recordData = true } = {}) => {
         operation: req.method.toLowerCase(),
       });
 
-      const [firstResponse] = (mock && mock.responses && Object.values(mock.responses)) || [];
+      const [firstResponseStatus] = (mock && mock.responses && Object.keys(mock.responses)) || [];
+      const firstResponse = mock.responses[firstResponseStatus];
 
       if (recordData) {
-        record(req, JSON.stringify(firstResponse, null, 2), cliOptions);
+        record(req, JSON.stringify(firstResponse, null, 2), cliOptions, firstResponseStatus);
       }
 
       res.body = firstResponse;
+      res.statusCode = Number.parseInt(firstResponseStatus, 10);
     } catch (e) {
-      console.error('Failed to generate mock response.', e);
+      logger.error('Failed to generate mock response.', e);
     }
 
     next();

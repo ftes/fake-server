@@ -1,33 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 
+import logger from '../utils/logger';
+import urlPathToFile from '../utils/url-path-to-file';
 import record from './record';
 
-function getSubDir(dir, subDir, remainingPathSegments) {
-  const dirContents = fs.readdirSync(dir);
-  const nextPath = path.join(dir, subDir);
-
-  return dirContents.includes(subDir)
-    // eslint-disable-next-line no-use-before-define
-    ? getDirWithWildcards(remainingPathSegments, nextPath)
-    : false;
-}
-
-/**
- * For path segment either
- * - a directory or file with exactly that name
- * - or a wildcard directory or file (`*`)
- * must be present.
- */
-function getDirWithWildcards(pathSegments, dir) {
-  if (pathSegments.length === 0) {
-    return dir;
-  }
-
-  const remainingPathSegments = pathSegments.slice(1);
-  return getSubDir(dir, pathSegments[0], remainingPathSegments)
-        || getSubDir(dir, '*', remainingPathSegments)
-        || false;
+export function getStatus(_path) {
+  const [, statusString] = /\.(\d{3})\.json$/.exec(_path) || [];
+  return statusString && Number.parseInt(statusString, 10);
 }
 
 /**
@@ -45,17 +25,16 @@ const middleware = (cliOptions, { touchMissing } = {}) => (req, res, next) => {
     return;
   }
 
-  console.log('looking for', req.method, req.path);
-  const pathSegments = req.path.split('/').filter(s => s !== '');
-  const dir = getDirWithWildcards(pathSegments, path.join(cliOptions.configDir, 'data'));
-  const file = dir && `${path.join(dir, req.method.toLowerCase())}.json`;
+  logger.info('looking for', req.method, req.path);
+  const file = urlPathToFile(req.path, path.join(cliOptions.configDir, 'data'), req.method);
 
-
-  if (dir && fs.existsSync(file)) {
-    console.log('found', file);
+  if (file && fs.existsSync(file)) {
+    logger.info('found', file);
     res.body = '';
+    res.statusCode = getStatus(file) || res.statusCode;
     try {
-      res.body = JSON.parse(fs.readFileSync(file));
+      res.body = fs.readFileSync(file, 'utf-8');
+      res.body = JSON.parse(res.body);
     } catch (e) {
       // ignore, maybe the file is empty
     }
