@@ -5,7 +5,7 @@ module.exports = {
     ['@neutrinojs/airbnb-base', {
       eslint: {
           rules: {
-              'no-console': 'off',
+              'import/no-named-as-default-member': 'off',
           },
       },
     }],

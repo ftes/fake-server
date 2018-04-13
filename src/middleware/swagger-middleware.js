@@ -1,4 +1,6 @@
 import swagmock from 'swagmock';
+
+import logger from '../utils/logger';
 import record from './record';
 
 const middlewareFactory = (apiSpec, cliOptions, { recordData = true } = {}) => {
@@ -24,7 +26,7 @@ const middlewareFactory = (apiSpec, cliOptions, { recordData = true } = {}) => {
 
       res.body = firstResponse;
     } catch (e) {
-      console.error('Failed to generate mock response.', e);
+      logger.error('Failed to generate mock response.', e);
     }
 
     next();

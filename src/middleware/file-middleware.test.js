@@ -4,6 +4,7 @@ import middlewareFactory from './file-middleware';
 import record from './record';
 
 jest.mock('./record');
+jest.mock('../utils/logger');
 
 const cliOptions = {
   configDir: path.resolve(__dirname, './file-middleware.test'),

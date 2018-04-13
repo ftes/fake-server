@@ -1,3 +1,5 @@
+import logger from '../utils/logger';
+
 function parseNumbers(obj) {
   const result = {};
   // convert to numbers
@@ -14,7 +16,7 @@ function parseNumbers(obj) {
 export default function middleware(req, res, next) {
   res.body = res.body || {};
   if (typeof res.body !== 'object') {
-    console.warn('Could not echo params into non-object body');
+    logger.warn('Could not echo params into non-object body');
     next();
     return;
   }

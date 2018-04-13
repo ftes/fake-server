@@ -1,4 +1,5 @@
 /* global __non_webpack_require__ */
+/* eslint-disable no-console */
 
 import bodyParser from 'body-parser';
 import express from 'express';
@@ -8,6 +9,7 @@ import cliArgs from 'command-line-args';
 import path from 'path';
 import process from 'process';
 import * as middleware from './middleware';
+import logger from './utils/logger';
 
 const optionList = [
   {
@@ -65,5 +67,5 @@ configuration(app, {
 });
 
 app.listen(options.port, () => {
-  console.log(`Fake server listening on port ${options.port}!`);
+  logger.info(`Fake server listening on port ${options.port}!`);
 });

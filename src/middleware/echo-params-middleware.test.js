@@ -1,5 +1,7 @@
 import middleware from './echo-params-middleware';
 
+jest.mock('../utils/logger');
+
 describe('echo params middleware', () => {
   let next;
 
