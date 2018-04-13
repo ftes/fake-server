@@ -30,8 +30,8 @@ function readdirSync(directoryPath) {
   return filesPerDir[directoryPath] || [];
 }
 
-function existsSync(file) {
-  return file in files;
+function existsSync(_path) {
+  return _path in files || _path in filesPerDir;
 }
 
 function readFileSync(file) {
