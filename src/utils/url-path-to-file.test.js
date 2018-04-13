@@ -1,4 +1,3 @@
-
 /* eslint-disable no-underscore-dangle */
 
 import fs from 'fs';
@@ -96,14 +95,28 @@ describe('url path to dir', () => {
       expect(output).toEqual('/searchDir/path/get.json');
     });
 
-    it('inserts a wildcard to get an indirect match', () => {
-      fs.__setMockFiles({
-        '/searchDir/*/get.json': '',
-      });
+    it('inserts wildcards to get an indirect match', () => {
+      const request = 'a/b/c';
+      const files = [
+        '/searchDir/a/b/c/get.json',
+        '/searchDir/*/b/c/get.json',
+        '/searchDir/a/*/c/get.json',
+        '/searchDir/a/b/*/get.json',
+        '/searchDir/*/*/c/get.json',
+        '/searchDir/*/b/*/get.json',
+        '/searchDir/a/*/*/get.json',
+        '/searchDir/*/*/*/get.json',
+      ];
 
-      const randomFn = jest.fn(([firstElement]) => firstElement);
-      const output = urlPathToFile('/path', '/searchDir', 'GET', randomFn);
-      expect(output).toEqual('/searchDir/*/get.json');
+      files.forEach((file) => {
+        fs.__setMockFiles({
+          [file]: '',
+        });
+
+        const randomFn = jest.fn(([firstElement]) => firstElement);
+        const output = urlPathToFile(request, '/searchDir', 'GET', randomFn);
+        expect(output).toEqual(file);
+      });
     });
   });
 });
