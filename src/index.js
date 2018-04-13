@@ -10,25 +10,8 @@ import path from 'path';
 import process from 'process';
 import * as middleware from './middleware';
 import logger from './utils/logger';
+import optionList, { mandatoryOptions, optionsUsage } from './cli-options';
 
-const optionList = [
-  {
-    name: 'configDir', group: 'mandatory', description: 'Directory with `configuration.js` file and `data` folder', alias: 'c', type: String,
-  },
-  {
-    name: 'port', description: 'Port the server listens on', alias: 'p', type: Number, defaultValue: 1337,
-  },
-  {
-    name: 'basicAuthUser', description: 'Basic Auth User for proxying', alias: 'u', type: String,
-  },
-  {
-    name: 'basicAuthPassword', description: 'Basic Auth Password for proxying', alias: 'w', type: String,
-  },
-  {
-    name: 'help', description: 'Display this usage guide.', alias: 'h', type: Boolean,
-  },
-];
-const mandatoryOptions = ['configDir'];
 // eslint-disable-next-line no-underscore-dangle
 const options = cliArgs(optionList, {
   partial: true,
@@ -37,11 +20,7 @@ const options = cliArgs(optionList, {
 const allMandatoryOptionsGiven = mandatoryOptions.every(name => name in options);
 
 if (options.help) {
-  console.log(cliUsage([
-    { header: 'Fake Server', content: 'Proxy, mock and play back stored responses.' },
-    { header: 'Mandatory Options', optionList, group: ['mandatory'] },
-    { header: 'Optional Options', optionList },
-  ]));
+  console.log(cliUsage(optionsUsage));
 
   process.exit();
 }
