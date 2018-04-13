@@ -20,14 +20,14 @@ const middleware = (cliOptions, { touchMissing } = {}) => (req, res, next) => {
   }
 
   console.log('looking for', req.method, req.path);
-  const dir = urlPathToFile(req.path, path.join(cliOptions.configDir, 'data'), req.method);
-  const file = dir && `${path.join(dir, req.method.toLowerCase())}.json`;
+  const file = urlPathToFile(req.path, path.join(cliOptions.configDir, 'data'), req.method);
 
-  if (dir && fs.existsSync(file)) {
+  if (file && fs.existsSync(file)) {
     console.log('found', file);
     res.body = '';
     try {
-      res.body = JSON.parse(fs.readFileSync(file));
+      res.body = fs.readFileSync(file);
+      res.body = JSON.parse(res.body);
     } catch (e) {
       // ignore, maybe the file is empty
     }
