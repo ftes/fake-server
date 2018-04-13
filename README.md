@@ -20,16 +20,21 @@ Use [`./config`](./config) as a template. Copy it to your app's repository. It m
 Responses can be manually added as files. Also, proxied responses and swagger-generated ones are stored to this directory.
 
 ### Mapping requests to files
-The file matching a request is expected to be present at `config/data/<req.path>/<req.method>.json`.
+The file matching a request is expected to be present at `config/data/<req.path>/<req.method>[.<req.statusCode>].json`.
 If a segment of `req.path` does not have a matching directory the `*` directory at that level is used as fallback (if present).
 
-The responses can be manually added. Also, proxied responses and swagger-generated ones are stored to this directory.
+If several matching files are present (multiple status codes) then a random one of these is selected.
+
+The order in which path segments are replaced with a `*` is shown in [`url-path-to-file.test.js`](./src/utils/url-path-to-file.test.js).
+
+The responses can be manually added. Also, proxied responses and swagger-generated ones are stored to this directory, if the `recordData: true` is passed to the middleware.
 
 ### Examples
 
 | Request                   | Response                            |
 | ------------------------- | ----------------------------------- |
 | `GET  books`              | `/data/books/get.json`              |
+| `GET  books`              | `/data/books/get.404.json`          |
 | `GET  books/123`          | `/data/books/*/get.json`            |
 | `POST books`              | `/data/books/post.json`             |
 | `GET  books/123/chapters` | `/data/books/123/chapters/get.json` |
