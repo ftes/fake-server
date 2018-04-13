@@ -7,7 +7,7 @@ const proxyAndRecord = (host, cliOptions, { recordData = true } = {}) => proxy(h
   proxyReqPathResolver: req => req.originalUrl,
   userResDecorator: (proxyRes, proxyResData, userReq) => {
     if (recordData) {
-      record(userReq, proxyResData, cliOptions);
+      record(userReq, proxyResData, cliOptions, proxyRes.statusCode);
     }
 
     return proxyResData;

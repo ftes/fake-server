@@ -56,9 +56,23 @@ describe('proxy middleware', () => {
       });
   });
 
-  it('records response', () => {
+  it('proxies status code', () => {
     proxyApp.use((req, res) => {
-      res.send('proxy response');
+      res.status(400).send('proxy response');
+    });
+    const middleware = middlewareFactory(proxyUrl, cliOptions, middlewareOptions);
+    app.use(middleware);
+
+    return request(server)
+      .get('/')
+      .expect((res) => {
+        expect(res.statusCode).toEqual(400);
+      });
+  });
+
+  it('records response with status code', () => {
+    proxyApp.use((req, res) => {
+      res.status(400).send('proxy response');
     });
     const middleware = middlewareFactory(proxyUrl, cliOptions, { recordData: true });
     app.use(middleware);
@@ -71,7 +85,7 @@ describe('proxy middleware', () => {
           baseUrl: '',
           path: '/path',
           method: 'GET',
-        }), expect.anything(), cliOptions);
+        }), expect.anything(), cliOptions, 400);
         expect(record.mock.calls[0][1]).toMatchString('proxy response');
       });
   });
