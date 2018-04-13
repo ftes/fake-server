@@ -6,9 +6,7 @@ import logger from '../utils/logger';
 export default function middleware(req, res, next) {
   if (Object.prototype.hasOwnProperty.call(res, 'body')) {
     logger.info('Sending data from res.body');
-
-    if (res.body) res.send(res.body);
-    else res.sendStatus(200);
+    res.send(res.body);
   } else {
     next();
   }
