@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Specify HTTP response status code in filename: e.g. `get.404.json` leads to a `HTTP 404`.
 - Choose a random response file if several match in the same folder (e.g. both `get.404.json` and `get.200.json` are present).
+- JSDoc in `configuration.js` so that the file is self-contained after copying it.
 
 ### Changed
 - URL to file mapping: order in which path segments are replaced with wildcards changed (see [./src/utils/url-path-to-file.test.js](`url-path-to-file.test.js`)).
