@@ -1,14 +1,12 @@
-/* eslint-disable no-underscore-dangle */
-import fs from 'fs';
+import path from 'path';
 
 import middlewareFactory from './file-middleware';
 import record from './record';
 
-jest.mock('fs');
 jest.mock('./record');
 
 const cliOptions = {
-  configDir: '/config',
+  configDir: path.resolve(__dirname, './file-middleware.test'),
 };
 const middlewareOptions = {
   touchMissing: false,
@@ -20,11 +18,8 @@ describe('file middleware', () => {
   let next;
 
   beforeEach(() => {
-    fs.__setMockFiles({
-      '/config/data/path/get.json': '{ "someJson": true }',
-    });
     req = {
-      path: '/path',
+      path: '/json',
       method: 'GET',
     };
     res = {};
@@ -41,10 +36,11 @@ describe('file middleware', () => {
   });
 
   it('uses simple string if json cannot be parsed', () => {
-    fs.__setMockFiles({
-      '/config/data/path/get.json': 'not json',
-    });
     const middleware = middlewareFactory(cliOptions, middlewareOptions);
+    req = {
+      ...req,
+      path: '/string',
+    };
 
     middleware(req, res, next);
 
@@ -53,7 +49,11 @@ describe('file middleware', () => {
   });
 
   it('should touch missing file', () => {
-    fs.__setMockFiles({});
+    req = {
+      ...req,
+      path: '/missing',
+    };
+
     const middleware = middlewareFactory(cliOptions, { touchMissing: true });
 
     middleware(req, res, next);

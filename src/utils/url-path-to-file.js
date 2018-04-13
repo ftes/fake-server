@@ -31,7 +31,7 @@ const urlPathToFile = (
   .map((dirSuffixSegments) => {
     const dirSuffix = dirSuffixSegments.join('/');
     const dir = path.join(searchDir, dirSuffix);
-    const filesInDir = fs.readdirSync(dir);
+    const filesInDir = fs.existsSync(dir) ? fs.readdirSync(dir) : [];
     const matchingFilesInDir = filterMatchingFiles(filesInDir, httpMethod);
     const matchingFiles = matchingFilesInDir.map(file => path.join(dir, file));
     return randomFunction(matchingFiles);

@@ -26,7 +26,7 @@ const middleware = (cliOptions, { touchMissing } = {}) => (req, res, next) => {
     console.log('found', file);
     res.body = '';
     try {
-      res.body = fs.readFileSync(file);
+      res.body = fs.readFileSync(file, 'utf-8');
       res.body = JSON.parse(res.body);
     } catch (e) {
       // ignore, maybe the file is empty
