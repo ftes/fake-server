@@ -1,6 +1,6 @@
 import path from 'path';
 
-import middlewareFactory from './file-middleware';
+import middlewareFactory, { getStatus } from './file-middleware';
 import record from './record';
 
 jest.mock('./record');
@@ -73,5 +73,34 @@ describe('file middleware', () => {
 
     expect(next).toBeCalled();
     expect(res.body).toEqual('existing');
+  });
+
+  it('uses status code from file name', () => {
+    const middleware = middlewareFactory(cliOptions, middlewareOptions);
+    req = {
+      ...req,
+      method: 'POST',
+      path: '/404',
+    };
+
+    middleware(req, res, next);
+
+    expect(next).toBeCalled();
+    expect(res.statusCode).toEqual(404);
+  });
+
+  describe('get status', () => {
+    it('extracts status from file name', () => {
+      const tests = [
+        { filePath: '/a/b/get.200.json', expectedStatus: 200 },
+        { filePath: '/get.404.json', expectedStatus: 404 },
+        { filePath: '/a/b/get.json', expectedStatus: undefined },
+      ];
+
+      tests.forEach(({ filePath, expectedStatus }) => {
+        const status = getStatus(filePath);
+        expect(status).toEqual(expectedStatus);
+      });
+    });
   });
 });

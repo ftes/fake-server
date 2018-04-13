@@ -5,6 +5,11 @@ import logger from '../utils/logger';
 import urlPathToFile from '../utils/url-path-to-file';
 import record from './record';
 
+export function getStatus(_path) {
+  const [, statusString] = /\.(\d{3})\.json$/.exec(_path) || [];
+  return statusString && Number.parseInt(statusString, 10);
+}
+
 /**
  * If the requested path matches a file in data, parse that file to res.body.
  * An asterisk (*) is interpreted as a wildcard if used as directory name.
@@ -26,6 +31,7 @@ const middleware = (cliOptions, { touchMissing } = {}) => (req, res, next) => {
   if (file && fs.existsSync(file)) {
     logger.info('found', file);
     res.body = '';
+    res.statusCode = getStatus(file) || res.statusCode;
     try {
       res.body = fs.readFileSync(file, 'utf-8');
       res.body = JSON.parse(res.body);
