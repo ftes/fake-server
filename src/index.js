@@ -34,6 +34,7 @@ if (!allMandatoryOptionsGiven) {
 
 const app = express();
 app.use(morgan('tiny')); // log requests
+app.use((req, res, next) => { delete req.headers['content-encoding']; next(); }); // workaround for https://gitlab.wescale.io/wco/openapi-codegen/issues/22
 app.use(bodyParser.json()); // parse JSON body in request
 app.use(bodyParser.urlencoded({
   extended: true,
