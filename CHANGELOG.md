@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unpublished] - date
 
+## [1.2.0] - 2018-08-03
+### Added
+- Dockerize
+
 ## [1.1.0] - 2018-04-13
 ### Added
 - Specify HTTP response status code in filename: e.g. `get.404.json` leads to a `HTTP 404`.
