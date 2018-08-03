@@ -46,3 +46,6 @@ You can use the provided middleware in your `configuration.js`. This includes:
 - [`proxy`](./src/middleware/proxy-middleware.js)
 - [`send-body`](./src/middleware/send-body-middleware.js)
 - [`swagger`](./src/middleware/swagger-middleware.js)
+
+## Docker
+- `docker run -v <your-config-dir>:/usr/src/app/config -p 1337:1337 @ftes/fake-server`
