@@ -12,7 +12,7 @@
     "start": "neutrino start",
     "lint": "neutrino lint",
     "test": "neutrino test",
-    "prepublish": "neutrino build"
+    "prepare": "neutrino build"
   },
   "author": "Fredrik Teschke",
   "license": "MIT",
