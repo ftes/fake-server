@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [1.2.0] - 2018-08-03
 ### Added
 - Dockerize
+- Allow pre-configuration script, that is invoked before any other middleware is registered on the express instance
 
 ## [1.1.0] - 2018-04-13
 ### Added

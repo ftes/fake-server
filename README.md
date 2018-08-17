@@ -47,5 +47,9 @@ You can use the provided middleware in your `configuration.js`. This includes:
 - [`send-body`](./src/middleware/send-body-middleware.js)
 - [`swagger`](./src/middleware/swagger-middleware.js)
 
+Optionally, you can add a `pre-configuration.js` to your configuration directory.
+This is invoked before any other middleware is registered on the express instance.
+A potential use-case is sanitizing the request for the `body-parser` middleware (see [this bug](https://github.com/expressjs/body-parser/issues/100)).
+
 ## Docker
 - `docker run -v <your-config-dir>:/usr/src/app/config -p 1337:1337 @ftes/fake-server`
