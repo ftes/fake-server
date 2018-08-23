@@ -34,12 +34,14 @@ if (!allMandatoryOptionsGiven) {
 
 const app = express();
 
-const preConfiguration = __non_webpack_require__(path.resolve(path.join(options.configDir, 'pre-configuration')));
-if (preConfiguration) {
+try {
+  const preConfiguration = __non_webpack_require__(path.resolve(path.join(options.configDir, 'pre-configuration')));
   preConfiguration(app, {
     options,
     middleware,
   });
+} catch (e) {
+  console.info('No pre-configuration file found.');
 }
 
 app.use(morgan('tiny')); // log requests
