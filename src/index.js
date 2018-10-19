@@ -2,6 +2,7 @@
 /* eslint-disable no-console */
 
 import bodyParser from 'body-parser';
+import compression from 'compression';
 import express from 'express';
 import morgan from 'morgan';
 import cliUsage from 'command-line-usage';
@@ -49,6 +50,7 @@ app.use(bodyParser.json()); // parse JSON body in request
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
+app.use(compression());
 
 const configuration = __non_webpack_require__(path.resolve(path.join(options.configDir, 'configuration')));
 configuration(app, {
