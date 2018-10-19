@@ -11,4 +11,4 @@ RUN npm run build
 VOLUME /usr/src/app/config
 
 EXPOSE 1337
-CMD [ "npm", "start", "--", "-c", "./config" ]
+CMD [ "node", "./build/index", "-c", "./config" ]
