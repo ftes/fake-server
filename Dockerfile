@@ -8,5 +8,7 @@ COPY src/ ./src
 COPY .neutrinorc.js ./.neutrinorc.js
 RUN npm run build
 
+VOLUME /usr/src/app/config
+
 EXPOSE 1337
 CMD [ "npm", "start", "--", "-c", "./config" ]
