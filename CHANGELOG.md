@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## UNRELEASED - date
+### Changed
+- Use pre-built js files in docker image (not `neutrino start`)
+
+### Aded
+- Explicitly expose /usr/src/app/config volume in Dockerfile
 
 ## [1.2.2] - 2018-10-19
 ### Fixed
